@@ -61,4 +61,4 @@ spec:
               key: password
         ports:
         - containerPort: 80
-name: magento2
+          name: magento2
