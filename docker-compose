@@ -1,0 +1,40 @@
+version: '3'
+services:
+  web:
+    container_name: magento
+    restart: always
+    #build: ./
+    #image: vrann/magento2devbox-web
+    image: vrann/magento-test-images:07a72990f1c961cbc1f2cfc32084e1f0
+    volumes:
+      - "~/.gitconfig:/home/magento2/.gitconfig"
+      - "~/.composer:/home/magento2/.composer"
+      - "~/.ssh:/home/magento2/.ssh"
+      - "./shared/logs/apache2:/var/log/apache2"
+      - "./shared/logs/php-fpm:/var/log/php-fpm"
+      - "./shared/configs/varnish:/home/magento2/configs/varnish"
+      - "./shared/.magento-cloud:/home/magento2/.magento-cloud"
+    environment:
+      - MAGENTO_BACKEND_PATH=admin
+      - MAGENTO_ADMIN_USER=admin
+      - MAGENTO_ADMIN_PASSWORD=admin123
+    ports:
+      - "80"
+      - "22"
+  db:
+    container_name: magentodb
+    restart: always
+    image: mysql:5.6
+    ports:
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=magento2
+    volumes:
+      - "./shared/var/logs/mysql:/var/log/mysql"
+
+  elasticsearch:
+      container_name: magento2devbox_elastic
+      image: elasticsearch:5
+      ports:
+        - "9200"
